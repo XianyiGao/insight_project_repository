@@ -1,0 +1,19 @@
+The Gateway URIs for Sandbox data and API calls are:
+
+XML API Sandbox Gateway URI
+
+https://api.sandbox.ebay.com/ws/api.dll
+
+SOAP API Sandbox Gateway URI
+
+https://api.sandbox.ebay.com/wsapi
+
+The Gateway URIs for live, production data and API calls are:
+
+XML API Production Gateway URI
+
+https://api.ebay.com/ws/api.dll
+
+SOAP API Production Gateway URI
+
+https://api.ebay.com/wsapi
