@@ -6,5 +6,6 @@ web/flaskEtsyApp/machine_learning_model_saved
 etsy_item_price_estimation/total_listing_data
 etsy_item_price_estimation/machine_learning_model_500wordfeatures
 etsy_item_price_estimation/__pycache__/
-.ipynb_checkpoints/
-
+*.ipynb
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
