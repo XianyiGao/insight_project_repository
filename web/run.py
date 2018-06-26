@@ -1,3 +1,3 @@
 #!/usr/bin/env python
-from flaskexample import app
+from flaskEtsyApp import app
 app.run(debug = True)

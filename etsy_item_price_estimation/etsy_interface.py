@@ -1,23 +1,25 @@
 
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 import urllib
-from urllib.parse import unquote, parse_qs
+from urllib.parse import parse_qs
 import json
 import logging
 import requests
-#from oauth_hook import OAuthHook
 from requests_oauthlib import OAuth1
 
-log = logging.getLogger(__name__)
+
 
 class Etsy(object):
-    """
-    Represents the etsy API
-    """
+    '''
+    This class creates an interface object with the Etsy API to request data
+    and return as a json object.
+    '''
+    
+    # production base url
     url_base = "https://openapi.etsy.com/v2"
     
     class EtsyError(Exception):
@@ -29,6 +31,7 @@ class Etsy(object):
         self.consumer_secret = consumer_secret
         
         if sandbox:
+            # sandbox base url
             self.url_base = "http://sandbox.openapi.etsy.com/v2"
         
         # generic authenticated oauth hook
@@ -39,11 +42,11 @@ class Etsy(object):
             self.full_oauth = OAuth1(oauth_token, oauth_token_secret, consumer_key, consumer_secret)
     
     def show_listings(self, limit, offset, color=None, color_wiggle=5):
-        """
+        '''
         Show all listings on the site.
-        color should be a RGB ('#00FF00') or a HSV ('360;100;100')
-        """
-        endpoint = '/listings/active' # + 'limit=' + limit + '&' + 'offset=' + offset
+        color should be a RGB or a HSV
+        '''
+        endpoint = '/listings/active'
         if color:
             self.params['color'] = color
             self.params['color_accuracy'] = color_wiggle
@@ -55,9 +58,9 @@ class Etsy(object):
         return json.loads(response.text)
     
     def get_user_info(self, user):
-        """
+        '''
         Get basic info about a user, pass in a username or a user_id
-        """
+        '''
         endpoint = '/users/%s' % user
         
         auth = {}
@@ -69,20 +72,20 @@ class Etsy(object):
         return json.loads(response.text)
     
     def find_user(self, keywords):
-        """
-        Search for a user given the 
-        """
+        '''
+        Search for a user given the keywords
+        '''
         endpoint = '/users'
         self.params['keywords'] = keywords
         response = self.execute(endpoint)
         return json.loads(response.text)
     
     def get_auth_url(self, permissions=[]):
-        """
+        '''
         Returns a url that a user is redirected to in order to authenticate with
         the etsy API. This is step one in the authentication process.
         oauth_token and oauth_token_secret need to be saved for step two.
-        """
+        '''
         endpoint = '/oauth/request_token'
         self.params = {}
         if permissions:
@@ -95,12 +98,12 @@ class Etsy(object):
         return {'oauth_token': token, 'url': url, 'oauth_token_secret': secret}
     
     def get_auth_token(self, verifier, oauth_token, oauth_token_secret):
-        """
+        '''
         Step two in the authentication process. oauth_token and oauth_token_secret
         are the same that came from the get_auth_url function call. Returned is
         the permanent oauth_token and oauth_token_secret that will be used in
         every subsiquent api request that requires authentication.
-        """
+        '''
         endpoint = '/oauth/access_token'
         self.params = {'oauth_verifier': verifier}
         oauth = OAuth1(oauth_token, oauth_token_secret, self.consumer_key, self.consumer_secret)
@@ -110,9 +113,9 @@ class Etsy(object):
         
     
     def execute(self, endpoint, method='get', oauth=None):
-        """
+        '''
         Actually do the request, and raise exception if an error comes back.
-        """
+        '''
         querystring = urllib.parse.urlencode(self.params)
         url = "%s%s" % (self.url_base, endpoint)
         if querystring:

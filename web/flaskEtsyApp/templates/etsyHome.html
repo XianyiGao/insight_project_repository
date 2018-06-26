@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://getbootstrap.com/docs/3.3/favicon.ico">
+
+    <title>Etsymator Home</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="../static/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../static/css/starter-template.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="../static/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body onload="catfunc1()" background="/static/background.jpg">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="http://etsypriceestimator.com">Etsy Price Estimator</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="http://etsypriceestimator.com">Home</a></li>
+            <li><a href="https://sites.google.com/site/xianyigao1">About Me</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+<br><br>
+<div class="container">
+    <div class="starter-template" style="background-color:purple">
+       <h1><font color="white">Input Item Description</font></h1>
+       <p class="lead"><font color="white">If you are not sure how much you can sell your crafted item in Etsy.com, this website can provide a good estimation. Please input as many details as you know about the item. You do not need to fill out each field for the estimator to work, but please make sure you indicate at least item title description and layer 1 of the category it belongs to.</font></p>
+    </div>
+
+   <div class="starter-template">
+       <p class="lead">             </p>
+   </div>
+
+   <div class = "container">
+
+     <form action="/output" method="GET">
+       <div class="form-group">
+         <label for="title_description">Item Title Description:</label>
+         <input type="text" id="title_description" name='title_description' placeholder="e.g. a business card holder">
+       </div>
+       <div>
+         <label for="Category1">Category Layer 1:</label>
+	     <select id="cat1", name="category1", onchange="catfunc1()">
+            <option value="none">none</option>
+            {% for item1 in category1 %}
+            <option value={{ item1 }}>{{ item1 }}</option>
+            {% endfor %}
+	     </select>
+       </div>
+       <div>
+        <label for="Category2">Category Layer 2:</label>
+	    <select id="cat2", name="category2", onchange="catfunc2()">
+            {% for item2 in category2 %}
+            <option value={{ item2 }}>{{ item2 }}</option>
+            {% endfor %}
+	    </select>
+       </div>
+       <div>
+        <label for="Category3">Category Layer 3:</label>
+	    <select id="cat3", name="category3">
+            {% for item3 in category3 %}
+            <option value={{ item3 }}>{{ item3 }}</option>
+            {% endfor %}
+	    </select>
+       </div>
+       <div class="form-group">
+         <label for="quantity">Quantity available:</label>
+         <input type="text" id="quantity" name='quantity' placeholder="e.g. 1 or 10">
+       </div>
+       <div>
+         <label for="material">Material:</label>
+	     <select id="material", name="material">
+            <option value="none">N.A.</option>
+            {% for material in materials %}
+            <option value={{ material }}>{{ material }}</option>
+            {% endfor %}
+	     </select>
+       </div>
+       <div>
+         <label for="who_made">Who made:</label>
+	     <select id="who_made", name="who_made">
+            <option value="i_did">I did</option>
+            <option value="someone_else">someone else</option>
+            <option value="collective">collective</option>
+	     </select>
+       </div>
+       <div>
+         <label for="when_made">When made:</label>
+	     <select id="when_made", name="when_made">
+            <option value="made_to_order">made_to_order</option>
+            {% for madeTime in when_made %}
+            <option value={{ madeTime }}>{{ madeTime }}</option>
+            {% endfor %}
+	     </select>
+       </div>
+        <div class="form-group">
+           <label for="item_weight">Item weight (lb):</label>
+           <input type="text" id="item_weight" name='item_weight' placeholder="only number">
+        </div>
+        <div class="form-group">
+           <label for="item_length">Item length (in):</label>
+           <input type="text" id="item_length" name='item_length' placeholder="only number">
+        </div>
+        <div class="form-group">
+           <label for="item_width">Item width (in):</label>
+           <input type="text" id="item_width" name='item_width' placeholder="only number">
+        </div>
+        <div class="form-group">
+           <label for="item_height">Item height (in):</label>
+           <input type="text" id="item_height" name='item_height' placeholder="only number">
+        </div>
+        <div>
+          <label for="style1">Style:</label>
+	      <select id="style1", name="style1">
+            <option value="none">N.A.</option>
+            {% for Onestyle in style %}
+            <option value={{ Onestyle }}>{{ Onestyle }}</option>
+            {% endfor %}
+	      </select>
+        </div>
+        <div>
+          <label for="is_taxable">Is it taxable?</label>
+	      <select id="is_taxable", name="is_taxable">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+	      </select>
+        </div>
+        <div>
+          <label for="is_customizable">Is it customizable?</label>
+	      <select id="is_customizable", name="is_customizable">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+	      </select>
+        </div>
+        <div>
+          <label for="is_digital_downloadable">Is it digital downloadable?</label>
+	      <select id="is_digital_downloadable", name="is_digital_downloadable">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+	      </select>
+        </div>
+        <div class="form-group">
+           <label for="feedback_count">How many buyer feedback do you have on your seller profile?</label>
+           <input type="text" id="feedback_count" name='feedback_count' placeholder="only number">
+        </div>
+        <div class="form-group">
+           <label for="seller_score">What is your rating (or seller score)? (range: 0 to 100)</label>
+           <input type="text" id="seller_score" name='seller_score' placeholder="only number">
+        </div>
+        <div>
+           <button type="submit" class="btn btn-default btn-lg">Estimate the price!</button>
+        </div>
+
+     </form>
+     <div class="starter-template">
+       <p class="lead">            </p>
+   </div>
+   </div>
+
+   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+   <script src="static/js/bootstrap.min.js"></script>
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../static/js/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../static/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script>
+	function catfunc1() {
+            var target = document.getElementById("cat2");
+            var i;
+            for(i = target.options.length - 1 ; i >= 0 ; i--)
+            {
+             target.remove(i);
+            }
+	        var x = document.getElementById("cat1").value;
+	        category2 ='{{ categoryLayer1 }}';
+            
+            var category2_good = JSON.parse(category2);
+            
+
+            for(var items_cat2 in category2_good[x]){
+             var option = document.createElement("option");
+             option.text = category2_good[x][items_cat2];
+             target.add(option);
+            
+            }
+            if (target.options.length == 0){
+             var option = document.createElement("option");
+             option.text = 'none';
+             target.add(option);
+            }
+            catfunc2()
+	}
+
+	function catfunc2() {
+            var target = document.getElementById("cat3");
+            var i;
+            for(i = target.options.length - 1 ; i >= 0 ; i--)
+            {
+             target.remove(i);
+            }
+	        var x1 = document.getElementById("cat1").value;
+            var x2 = document.getElementById("cat2").value;
+	        category3 ='{{ categoryLayer2 }}';
+            
+            var category3_good = JSON.parse(category3);
+            
+
+            for(var items_cat3 in category3_good[x1+x2]){
+             var option = document.createElement("option");
+             option.text = category3_good[x1+x2][items_cat3];
+             target.add(option);
+            }
+            if (target.options.length == 0){
+             var option = document.createElement("option");
+             option.text = 'none';
+             target.add(option);
+            }
+	}
+    </script>
+
+</body></html>

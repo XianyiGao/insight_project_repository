@@ -1,13 +1,7 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
 import nltk
 import string
 import os
-
+import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.stem.porter import PorterStemmer
 
@@ -24,19 +18,24 @@ def tokenize(text):
     stems = stem_tokens(tokens, PorterStemmer())
     return stems
 
-def tfidf_transform(textList):
+def tfidf_transform(textList, max_features=None):
     token_dict = {}
-    
+    # create translator for punctuation removal
     translator = str.maketrans('', '', string.punctuation)
     for i in range(0, len(textList)):
         text = textList[i]
+        # convert all words to lower case
         lowers = text.lower()
-        str.maketrans('', '', string.punctuation)
+        # remove punctuation
         no_punctuation = lowers.translate(translator)
         token_dict[str(i)] = no_punctuation
 
-    #this can take some time
-    tfidf = TfidfVectorizer(tokenizer=tokenize, stop_words='english', max_features=100)
+    # this can take some time
+    if max_features == None:
+        tfidf = TfidfVectorizer(tokenizer=tokenize, stop_words='english')
+    else:
+        tfidf = TfidfVectorizer(tokenizer=tokenize, stop_words='english', max_features=max_features)
+    
     tfs = tfidf.fit_transform(token_dict.values())
-    return tfs
+    return tfs, tfidf
 
