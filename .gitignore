@@ -1,1 +1,9 @@
 __pycache__/
+.ipynb_checkpoints/
+web/flaskEtsyApp/static/machine_learning_model
+web/flaskEtsyApp/total_listing_data
+web/flaskEtsyApp/machine_learning_model_saved
+etsy_item_price_estimation/total_listing_data
+etsy_item_price_estimation/machine_learning_model_500wordfeatures
+etsy_item_price_estimation/__pycache__/
+
