@@ -1,9 +1,3 @@
-
-# coding: utf-8
-
-# In[14]:
-
-
 import psycopg2
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -16,6 +10,7 @@ import pickle
 from sklearn.metrics import mean_squared_error
 from math import sqrt
 
+# define parameter values config.py
 def getData():
     username = 'postgres'
     password = 'thisisforetsyapp'
@@ -67,7 +62,7 @@ def plotSellerScore(df):
     plt.ylabel('item price')
     fig.figure.savefig("SellerScoreVsPrice.png")
 
-
+# funtions are usually small and short
 def data_preprocessing(df, df_title):
     print('processing data...')
     categorical_col = ['category_id1', 'category_id2', 'category_id3', 'material', 'who_made', 'when_made', 'style_1', 'style_2']
@@ -138,7 +133,7 @@ def calculate_rmse(RF_regr_new, test_x, test_y):
 
     rms = sqrt(mean_squared_error(test_y, predicted_price))
     return predicted_price, rms
-
+# use log instead of print
 def analysis(test_x, test_y, predicted_price):
     print(test_x.columns[515:537])
     category_bad = []
@@ -198,9 +193,6 @@ if __name__=='__main__':
     #model_name = train_create_model(train_x, train_y)
     rfrModel=load_model("machine_learning_model_saved")
    
-    
-    
-
     predicted_price, rms = calculate_rmse(rfrModel, test_x, test_y)
     print(rms)
     rms_category_removed, predicted_price_organized, test_y_organized = analysis_category_removed(test_x, test_y, predicted_price)
@@ -208,11 +200,4 @@ if __name__=='__main__':
     rms_training, predicted_price_x = trainingSetAnalysis(train_x, train_y, rfrModel)
     print(rms_training)
 
-    #data_dic = {}
-    #data_dic['train_x'] = train_x
-    #data_dic['train_y'] = train_y
-    #data_dic['test_x'] = test_x
-    #data_dic['test_y'] = test_y
-    #with open("analysis_data_backup", "wb") as fp:
-    #    pickle.dump(data_dic, fp)
 

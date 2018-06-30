@@ -51,11 +51,13 @@
 
 <div class="container">
    <div class="starter-template" style="background-color:purple">
-       <h1><font color="white">Price Estimation Results: ${{ predicted_price }}</font></h1>
+       <h1><font color="white">The suggested price for your item is: ${{ predicted_price }}</font></h1>
        <p class="lead"><font color="white">This page shows the estimated price of your item based on the historical data from Etsy.com. Following figure shows the estimated price distribution for your item.</font></p>
-       <img src="{{ url_for('fig', figureName = figureName) }}" alt="Image Placeholder">
+        
+       <img src="{{ url_for('fig', figureName = figureName) }}" alt="Image Placeholder" style="max-width: 80%;max-height: 100%">
+       
    </div>
-
+</div>
 
 
     <!-- Bootstrap core JavaScript

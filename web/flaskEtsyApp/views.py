@@ -69,33 +69,33 @@ def etsy_output():
    
    title_splitted = tfidf_model.transform([title])
    feature_values = title_splitted.toarray()[0].tolist()
-   if quantity==None or len(quantity)==0 or int(float(quantity))==0:
+   if quantity==None or len(quantity)==0 or (not is_number(quantity)) or int(float(quantity))==0:
        feature_values.append(0)
    else:
        feature_values.append(int(float(quantity)))
 
-   if item_weight==None or len(item_weight)==0 or int(float(item_weight))==0:
+   if item_weight==None or len(item_weight)==0 or (not is_number(item_weight)) or int(float(item_weight))==0:
        feature_values.append(0)
        feature_values.append(0)
    else:
        feature_values.append(float(item_weight))
        feature_values.append(1)
 
-   if item_length==None or len(item_length)==0 or int(float(item_length))==0:
+   if item_length==None or len(item_length)==0 or (not is_number(item_length)) or int(float(item_length))==0:
        feature_values.append(0)
        feature_values.append(0)
    else:
        feature_values.append(float(item_length))
        feature_values.append(1)
 
-   if item_width==None or len(item_width)==0 or int(float(item_width))==0:
+   if item_width==None or len(item_width)==0 or (not is_number(item_width)) or int(float(item_width))==0:
        feature_values.append(0)
        feature_values.append(0)
    else:
        feature_values.append(float(item_width))
        feature_values.append(1)
 
-   if item_height==None or len(item_height)==0 or int(float(item_height))==0:
+   if item_height==None or len(item_height)==0 or (not is_number(item_height)) or int(float(item_height))==0:
        feature_values.append(0)
        feature_values.append(0)
    else:
@@ -117,12 +117,12 @@ def etsy_output():
    else:
        feature_values.append(0)
 
-   if feedback_count==None or len(feedback_count)==0 or int(float(feedback_count))==0:
+   if feedback_count==None or len(feedback_count)==0 or (not is_number(feedback_count)) or int(float(feedback_count))==0:
        feature_values.append(0)
    else:
        feature_values.append(int(float(feedback_count)))
 
-   if seller_score==None or len(seller_score)==0 or int(float(seller_score))==0:
+   if seller_score==None or len(seller_score)==0 or (not is_number(seller_score)) or int(float(seller_score))==0:
        feature_values.append(0)
        feature_values.append(0)
    else:
@@ -222,6 +222,12 @@ def fig(figureName):
     img.seek(0)
     return send_file(img, mimetype='image/png')
 
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
 
 @app.route('/')
 @app.route('/etsyhome')
