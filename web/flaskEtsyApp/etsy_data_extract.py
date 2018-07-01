@@ -1,90 +1,97 @@
-import datetime
-import seaborn as sns
-import pandas as pd
-from etsy_interface import Etsy
-import pickle
+"""
+This is for data extraction using Etsy API calls.
+
+There may be limitation on the total numbers of API calls allowed in a given time.
+Please refer to Etsy API for more details:
+https://www.etsy.com/developers/documentation/getting_started/api_basics
+"""
+
 import time
-import sys
+import pickle
+from etsy_interface import Etsy
 
 
-def extract_listings(e):
-    '''
-    Extract all current active listings
-    '''
+def extract_listings(etsy_connector):
+    """
+    Extracts all current active listings available from Etsy API.
+    """
     total_listing_data = []
-    for i in range(0, 500):
-        index = 100*i
-        result = e.show_listings('100', str(index))
+    # 500 is the maximum number related to the page offset
+    for i in range(500):
+        index = 100 * i   # set offset paramter for Etsy pagination
+        max_per_page = '100'  # set maximum numbers of listings per page
+        result = etsy_connector.show_listings(max_per_page, str(index))
         total_listing_data.append(result)
         # sleep for 1 second on every 10 calls due to API limitation
-        if i in range(9,500,10):
+        if i in range(9, 500, 10):
             time.sleep(1)
-    with open("total_listing_data", "wb") as fp:
-        pickle.dump(total_listing_data, fp)
     return total_listing_data
 
+def store_data(file_name, data):
+    """
+    Save data to a binary file.
+    """
+    with open(file_name, 'wb') as data_file:
+        pickle.dump(data, data_file)
 
-def find_user_id(total_listing_data_loaded):
-    # this user dictionary is for the conviinence of referring users
+def find_user_id(item_listing_data):
+    """
+    Finds all user ids and store them as a big dictionary.
+    """
     user_id_dict = {}
-    for i in range(0, len(total_listing_data_loaded)):
-        for j in range(0, len(total_listing_data_loaded[i]['results'])):
-            if 'user_id' not in total_listing_data_loaded[i]['results'][j].keys():
+    for item in item_listing_data:
+        temp_results = item['results']
+        for id_element in temp_results:
+            if 'user_id' not in id_element.keys():
                 continue
-            key = str(total_listing_data_loaded[i]['results'][j]['user_id'])
+            key = str(id_element['user_id'])
             if key not in user_id_dict.keys():
                 user_id_dict[key] = 1
     return user_id_dict
 
-def extract_user_info(user_id_dict, e2):
-    user_info = {}
+def extract_user_info(user_id_dict, etsy_connector):
+    """
+    Extracts all user information from Etsy using all the
+    user ids.
+    """
+    user_info = {}   # put user info into a dictionary with id as key
     counter = 0
-    for single_key in user_id_dict.keys():
-        try:
-            if single_key not in user_info.keys():
-                key_int=int(single_key)
-                element=e2.get_user_info(key_int)
-                user_info[single_key] = element
-                counter += 1
-                # sleep for 1 second on every 10 API calls
-                if counter % 10 == 0:
-                    time.sleep(1)
-                # record a backup in every 100 API calls in case of sudden API restriction
-                if counter % 100 == 0:
-                    filename = 'user_info_' + str(counter)
-                    with open(filename, "wb") as fp3:
-                        pickle.dump(user_info, fp3)
-        except Exception as error:
-            print(error)
-    # store the complete data in binary file first
-    with open('user_info_complete', "wb") as fp3:
-                pickle.dump(user_info, fp3)
+    for id_key in user_id_dict.keys():
+        if id_key not in user_info.keys():
+            key_int = int(id_key)
+            try:
+                element = etsy_connector.get_user_info(key_int)
+            except Exception as error:
+                print(error)
+                continue
+            user_info[id_key] = element
+            counter += 1
+            # sleep for 1 second on every 10 API calls due to API limitation
+            if counter % 10 == 0:
+                time.sleep(1)
+    return user_info
 
 
-            
-if __name__=='__main__':
-    '''
-    Data extracting using Etsy API calls.
-    There may be limitation on the total numbers of API calls allowed in a given time.
-    Please refer to Etsy API for more details:
-    https://www.etsy.com/developers/documentation/getting_started/api_basics
-    '''
-    print("Please wait until you see the messsage: All data are extracted! This can take very long time ...")
-    authen_key1 = 'zdipkqu8fxsomaoriwj1x98a'
-    authen_secret1 = 'rxv4sdcs5g'
-    e = Etsy(authen_key1, authen_secret1)
+if __name__ == '__main__':
+    print('Please wait until you see the messsage: '
+          '"All data are extracted!"\n'
+          'This can take very long time ...')
 
-    # extract and save data as a binary file first
-    listing_data = extract_listings(e)
+    # define the API keys
+    AUTHEN_KEY = 'zdipkqu8fxsomaoriwj1x98a'
+    AUTHEN_SECRET = 'rxv4sdcs5g'
+    etsy_con = Etsy(AUTHEN_KEY, AUTHEN_SECRET)
 
+    # extract item listing data
+    # and save data as a binary file first
+    listing_data = extract_listings(etsy_con)
+    listing_data_filename = 'total_listing_data'
+    store_data(listing_data_filename, listing_data)
+
+    # organize and clean user id data
     user_id_dictionary = find_user_id(listing_data)
-
-    # use another key to extract data due to the limitation of API calls
-    authen_key2 = 'dnbju23vywp4369ccw4ugcut'
-    authen_secret2 = '5ac0qkonp8'
-    e2 = Etsy(authen_key2, authen_secret2)
-
-    # extract and save data as a binary file first
-    extract_user_info(user_id_dictionary, e2)
+    # extract user info data from different API calls
+    user_info_data = extract_user_info(user_id_dictionary, etsy_con)
+    user_info_filename = 'user_info_complete'
+    store_data(user_info_filename, user_info_data)
     print('All data are extracted!')
-
