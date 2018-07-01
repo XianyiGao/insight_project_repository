@@ -1,101 +1,110 @@
 import pickle
-import pandas as pd
 import collections
 import sqlalchemy
 import sqlalchemy_utils
+import pandas as pd
 
 
-def loadBinary():
-    with open("total_listing_data", "rb") as fp:
-        listing_data = pickle.load(fp)
-
-    with open("user_info_complete", "rb") as fp2:
-        user_info = pickle.load(fp2)
-        
-    return listing_data, user_info
-
-
+def load_binary(data_filename):
+    """
+    Loads data file from previously saved file. The data
+    include all information about the Etsy items or user info.
+    """
+    with open(data_filename, 'rb') as data_file:
+        loaded_data = pickle.load(data_file)
+    return loaded_data
 
 def feature_extract(total_listing_data_loaded, user_info_dictionary):
-    # initiating features
+    """
+    Extracts features from raw data pulled from Etsy API.
+    Results are combined and returned as a dataframe.
+    """
+
     listing_id = []
-    user_id    = []
-    # three layers of item category
+    user_id = []
+    # three hierarchical layers of item categories
     category_id1 = []
     category_id2 = []
     category_id3 = []
-    title_list   = []
+    # features about posted item
+    title_list = []
     description_list = []
-    price_list       = []
-    quantity_list    = []
-    tags_list        = []
-    material_list    = []
-    who_made_list    = []
-    when_made_list   = []
-    feedback_count_list = []
-    seller_score_list   = []
-    item_weight_list    = []
-    item_length_list    = []
-    item_width_list     = []
-    item_height_list    = []
+    material_list = []
+    who_made_list = []
+    when_made_list = []
+    item_weight_list = []
+    item_length_list = []
+    item_width_list = []
+    item_height_list = []
     style1_list = []
     style2_list = []
-    non_taxable_list         = []
-    is_customizable_list     = []
-    is_digital_download_list = []
-    # following two features are only available after posting, so not considered
-    # item_views_list = []
-    # item_fav_list = []
-    ###############################################
-    # indicators are those features that 'tell' machine learning model about whether
-    # the corresponding value for the corresponding feature is provided or missing.
-    # Indicators are only needed for continuous values. ML generally picks missing
-    # data automatically for categorical values with a separate label.
+    tags_list = []
+    quantity_list = []
+    # Following indicators are those features that 'tell' machine learning
+    # model about whether the corresponding value for the corresponding
+    # feature is provided or missing. Indicators are only needed for
+    # continuous values. ML generally picks missing data automatically for
+    # categorical values with a separate label.
     seller_score_indicator = []
-    item_weight_indicator  = []
-    item_length_indicator  = []
-    item_width_indicator   = []
-    item_height_indicator  = []
-
-
+    item_weight_indicator = []
+    item_length_indicator = []
+    item_width_indicator = []
+    item_height_indicator = []
+    # features about seller
+    feedback_count_list = []
+    seller_score_list = []
+    # other features
+    non_taxable_list = []
+    is_customizable_list = []
+    is_digital_download_list = []
+    # listed price of items
+    price_list = []
+    
     # counting invalid data (e.g. price is not USD)
     invalide_data_count = 0
     max1=0
     max2=0
 
     # extract and organize features, prepare for later machine learning model
-    for i in range(0,len(total_listing_data_loaded)):
-        results      = total_listing_data_loaded[i]['results']
-        count        = total_listing_data_loaded[i]['count']
-        params       = total_listing_data_loaded[i]['params']
-        responseType = total_listing_data_loaded[i]['type']
-        pagination   = total_listing_data_loaded[i]['pagination']
-        for j in range(0, len(results)):
-            # first get rid of invalid postings
-            if ('category_id' not in results[j].keys()) or ('price' not in results[j].keys()) or (results[j]['currency_code']!='USD') or ('category_path' not in results[j].keys()) or float(results[j]['price'])>1000:
+    for page_element in total_listing_data_loaded:
+        results      = page_element['results']
+        count        = page_element['count']
+        params       = page_element['params']
+        responseType = page_element['type']
+        pagination   = page_element['pagination']
+        for each_item in results:
+            # first get rid of invalid postings, item price that is 
+            # greater than $1000. About 99% of postings extracted
+            # has price less than $1000. This project only considers
+            # items with price less than or equal $1000.
+            if (('category_id' not in each_item.keys()) 
+                or ('price' not in each_item.keys())
+                or (each_item['currency_code']!='USD')
+                or ('category_path' not in each_item.keys())
+                or (float(each_item['price'])>1000)):
                 invalide_data_count += 1
                 continue
 
-            if len(results[j]['category_path'])>max1:
-                max1 = len(results[j]['category_path'])
-            if results[j]['style'] != None and len(results[j]['style'])>max2:
-                max2 = len(results[j]['style'])
-            listing_id.append(results[j]['listing_id'])
-            user_id.append(results[j]['user_id'])
-            title_list.append(results[j]['title'])
-            description_list.append(results[j]['description'])
-            price_list.append(float(results[j]['price']))
-            quantity_list.append(results[j]['quantity'])
-            tags_list.append(results[j]['tags'])
+            if len(each_item['category_path'])>max1:
+                max1 = len(each_item['category_path'])
+            if each_item['style'] != None and len(each_item['style'])>max2:
+                max2 = len(each_item['style'])
+            listing_id.append(each_item['listing_id'])
+            user_id.append(each_item['user_id'])
+            title_list.append(each_item['title'])
+            description_list.append(each_item['description'])
+            price_list.append(float(each_item['price']))
+            quantity_list.append(each_item['quantity'])
+            tags_list.append(each_item['tags'])
             # handle the three layers of category
             for k in range(0, 3):
-                if k<len(results[j]['category_path']):
+                if k<len(each_item['category_path']):
                     if k == 0:
-                        category_id1.append(results[j]['category_path'][k])
+                        category_id1.append(each_item['category_path'][k])
                     elif k == 1:
-                        category_id2.append(results[j]['category_path'][k])
+                        category_id2.append(each_item['category_path'][k])
                     else:
-                        category_id3.append(results[j]['category_path'][k])
+                        category_id3.append(each_item['category_path'][k])
                 else:
                     if k == 0:
                         category_id1.append('none')
@@ -104,81 +113,81 @@ def feature_extract(total_listing_data_loaded, user_info_dictionary):
                     else:
                         category_id3.append('none')
 
-            if 'materials' not in results[j].keys():
+            if 'materials' not in each_item.keys():
                 material_list.append('none')
-            elif len(results[j]['materials'])<=0:
+            elif len(each_item['materials'])<=0:
                 material_list.append('none')
             else:
-                material_list.append(results[j]['materials'][0].lower())
+                material_list.append(each_item['materials'][0].lower())
 
 
             #item_views_list.append(results[j]['views'])
             #item_fav_list.append(results[j]['num_favorers'])
 
-            if results[j]['who_made'] == None:
+            if each_item['who_made'] == None:
                 who_made_list.append('none')
             else:
-                who_made_list.append(results[j]['who_made'])
+                who_made_list.append(each_item['who_made'])
 
-            if results[j]['when_made'] == None:
+            if each_item['when_made'] == None:
                 when_made_list.append('none')
             else:
-                when_made_list.append(results[j]['when_made'])
+                when_made_list.append(each_item['when_made'])
 
-            if results[j]['item_weight'] == None:
+            if each_item['item_weight'] == None:
                 item_weight_indicator.append(0)
                 item_weight_list.append(0)
             else:
                 item_weight_indicator.append(1)
-                item_weight_list.append(float(results[j]['item_weight']))
+                item_weight_list.append(float(each_item['item_weight']))
 
             scale_factor = 1.0
             # note that different listings may have different dimension unit
-            if results[j]['item_dimensions_unit'] == 'mm':
+            if each_item['item_dimensions_unit'] == 'mm':
                 # convert mm to in
                 scale_factor = 0.0393701
 
-            if results[j]['item_length'] == None:
+            if each_item['item_length'] == None:
                 item_length_indicator.append(0)
                 item_length_list.append(0)
             else:
                 item_length_indicator.append(1)
-                item_length_list.append(float(results[j]['item_length'])*scale_factor)
+                item_length_list.append(float(each_item['item_length'])*scale_factor)
 
-            if results[j]['item_width'] == None:
+            if each_item['item_width'] == None:
                 item_width_list.append(0)
                 item_width_indicator.append(0)
             else:
-                item_width_list.append(float(results[j]['item_width'])*scale_factor)
+                item_width_list.append(float(each_item['item_width'])*scale_factor)
                 item_width_indicator.append(1)
 
-            if results[j]['item_height'] == None:
+            if each_item['item_height'] == None:
                 item_height_indicator.append(0)
                 item_height_list.append(0)
             else:
                 item_height_indicator.append(1)
-                item_height_list.append(float(results[j]['item_height'])*scale_factor)
+                item_height_list.append(float(each_item['item_height'])*scale_factor)
 
-            if results[j]['style'] == None:
+            if each_item['style'] == None:
                 style1_list.append('none')
                 style2_list.append('none')
-            elif len(results[j]['style']) == 1:
+            elif len(each_item['style']) == 1:
                 style2_list.append(0)
-                style1_list.append(results[j]['style'][0]) 
+                style1_list.append(each_item['style'][0]) 
             else:
-                style1_list.append(results[j]['style'][0])
-                style2_list.append(results[j]['style'][1])
+                style1_list.append(each_item['style'][0])
+                style2_list.append(each_item['style'][1])
 
-            if results[j]['non_taxable']:
+            if each_item['non_taxable']:
                 non_taxable_list.append(1)
             else:
                 non_taxable_list.append(0)
-            if results[j]['is_customizable']:
+            if each_item['is_customizable']:
                 is_customizable_list.append(1)
             else:
                 is_customizable_list.append(0)
 
-            if results[j]['is_digital']:
+            if each_item['is_digital']:
                 is_digital_download_list.append(1)
             else:
                 is_digital_download_list.append(0)
@@ -223,14 +232,15 @@ def feature_extract(total_listing_data_loaded, user_info_dictionary):
     df = pd.DataFrame.from_dict(data)
     return df
 
-def createPSQL(df):
-    username = 'postgres'
-    password = 'thisisforetsyapp'
-    host     = 'localhost'
-    port     = '5432'            # default port that postgres listens on
-    db_name  = 'etsy_db'
+def createPSQL(df, username, password, host, port, db_name):
+    """
+    Create postgreSQL db, using the processed dataframe
+    """
     
-    engine = sqlalchemy.create_engine( 'postgresql://{}:{}@{}:{}/{}'.format(username, password, host, port, db_name) )
+    engine = sqlalchemy.create_engine(
+        'postgresql://{}:{}@{}:{}/{}'.format(username, password,
+                                             host, port, db_name)
+        )
     print(engine.url)
     if not sqlalchemy_utils.database_exists(engine.url):
         sqlalchemy_utils.create_database(engine.url)
@@ -241,7 +251,16 @@ def createPSQL(df):
 
 
 if __name__ == '__main__':
-    total_listing_data_loaded, user_info_dictionary = loadBinary()
+    db_username = 'postgres'
+    db_password = 'thisisforetsyapp'
+    db_host = 'localhost'
+    db_port = '5432'   # default port that postgres listens on
+    db_etsy_name = 'etsy_db'
+
+    listing_data_filename = 'total_listing_data'
+    total_listing_data_loaded = load_binary(listing_data_filename)
+    user_info_filename = 'user_info_complete'
+    user_info_dictionary = load_binary(user_info_filename)
     df = feature_extract(total_listing_data_loaded, user_info_dictionary)
-    createPSQL(df)
+    createPSQL(df, db_username, db_password, db_host, db_port, db_etsy_name)
 
