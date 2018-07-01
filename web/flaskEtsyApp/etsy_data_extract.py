@@ -8,7 +8,7 @@ https://www.etsy.com/developers/documentation/getting_started/api_basics
 
 import time
 import pickle
-from etsy_interface import Etsy
+import etsy_interface
 
 
 def extract_listings(etsy_connector):
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     # define the API keys
     AUTHEN_KEY = 'zdipkqu8fxsomaoriwj1x98a'
     AUTHEN_SECRET = 'rxv4sdcs5g'
-    etsy_con = Etsy(AUTHEN_KEY, AUTHEN_SECRET)
+    etsy_con = etsy_interface.Etsy(AUTHEN_KEY, AUTHEN_SECRET)
 
     # extract item listing data
     # and save data as a binary file first

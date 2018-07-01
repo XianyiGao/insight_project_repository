@@ -17,7 +17,7 @@ class Etsy(object):
     """
 
     # production base url
-    url_base = "https://openapi.etsy.com/v2"
+    url_base = 'https://openapi.etsy.com/v2'
 
     class EtsyError(Exception):
         """
@@ -84,7 +84,7 @@ class Etsy(object):
         endpoint = '/oauth/request_token'
         self.params = {}
         if permissions:
-            self.params = {'scope': " ".join(permissions)}
+            self.params = {'scope': ' '.join(permissions)}
         response = self.execute(endpoint, oauth=None)
         parsed = urllib.parse.parse_qs(response.text)
         url = parsed['login_url'][0]
@@ -112,9 +112,9 @@ class Etsy(object):
         Actually do the request, and raise exception if an error comes back.
         """
         querystring = urllib.parse.urlencode(self.params)
-        url = "%s%s" % (self.url_base, endpoint)
+        url = '%s%s' % (self.url_base, endpoint)
         if querystring:
-            url = "%s?%s" % (url, querystring)
+            url = '%s?%s' % (url, querystring)
         print(url)
         hooks = {}
         if oauth:

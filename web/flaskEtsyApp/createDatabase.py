@@ -1,10 +1,8 @@
 import pickle
 import pandas as pd
-import numpy as np
-from collections import OrderedDict
-from sqlalchemy import create_engine
-from sqlalchemy_utils import database_exists, create_database
-import psycopg2
+import collections
+import sqlalchemy
+import sqlalchemy_utils
 
 
 def loadBinary():
@@ -196,7 +194,7 @@ def feature_extract(total_listing_data_loaded, user_info_dictionary):
             seller_score_indicator.append(1)
     
     # putting everything in a dataframe
-    data = OrderedDict([ ('title', title_list),
+    data = collections.OrderedDict([ ('title', title_list),
           ('category_id1', category_id1),
           ('category_id2', category_id2),
           ('category_id3',  category_id3),
@@ -232,11 +230,11 @@ def createPSQL(df):
     port     = '5432'            # default port that postgres listens on
     db_name  = 'etsy_db'
     
-    engine = create_engine( 'postgresql://{}:{}@{}:{}/{}'.format(username, password, host, port, db_name) )
+    engine = sqlalchemy.create_engine( 'postgresql://{}:{}@{}:{}/{}'.format(username, password, host, port, db_name) )
     print(engine.url)
-    if not database_exists(engine.url):
-        create_database(engine.url)
-    print('connected to database = ', database_exists(engine.url))
+    if not sqlalchemy_utils.database_exists(engine.url):
+        sqlalchemy_utils.create_database(engine.url)
+    print('connected to database = ', sqlalchemy_utils.database_exists(engine.url))
     print('loading data to sql, please wait ...')
     df.to_sql('etsy_item_table', engine, if_exists='replace')
     print('completed!')
