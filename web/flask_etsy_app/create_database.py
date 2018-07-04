@@ -3,6 +3,7 @@ This module can be used to load and process the raw data extracted
 from Etsy API. The organized data is then pushed to PostgreSQL database.
 """
 
+
 import pickle
 import collections
 import sqlalchemy

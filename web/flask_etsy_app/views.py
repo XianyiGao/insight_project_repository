@@ -216,7 +216,7 @@ def fig(figureName):
     plt.plot(x, density(x))
     plt.xlabel('Price (USD)')
     plt.ylabel('Density')
-    plt.title('Density Plot for Estimated Price Distribution')
+    plt.title('Estimated Price Distribution of Your Item')
     img = BytesIO()
     plt.savefig(img)
     img.seek(0)
