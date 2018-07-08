@@ -26,7 +26,9 @@ Estimating the price for handmade items is very difficult because the item is hi
 
 ![pretty_plot](https://user-images.githubusercontent.com/1843504/42423160-953d598a-82c3-11e8-918e-e2337da7087b.png)
 
-### 
+###  
+
+![git1](https://user-images.githubusercontent.com/1843504/42423228-0b16c2bc-82c5-11e8-9002-2d8ddb4690b7.png)
 
 
 ## Implementation Details and Model Performance
