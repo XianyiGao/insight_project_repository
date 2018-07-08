@@ -20,8 +20,6 @@
     <!-- Custom styles for this template -->
     <link href="../static/css/starter-template.css" rel="stylesheet">
 
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="../static/js/ie-emulation-modes-warning.js"></script>
 
   </head>
@@ -53,7 +51,7 @@
    <div class="starter-template" style="background-color:purple">
        <h1><font color="white">The suggested price for your item is: ${{ predicted_price }}</font></h1>
        <p class="lead"><font color="white">This page shows the price estimation of your item based on the historical data from Etsy.com. While the suggested price is the most recommended one, more information on the price variation of your item can be found in the following price distribution chart. The vertical axis shows the price density. The higher the density in a certain price value, the more likely your item's price is close to that value.</font></p>
-        
+      
        <img src="{{ url_for('fig', figureName = figureName) }}" alt="Image Placeholder" style="max-width: 80%;max-height: 100%">
        
    </div>
@@ -70,5 +68,4 @@
     <script src="../static/js/ie10-viewport-bug-workaround.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
   
-
 </body></html>
