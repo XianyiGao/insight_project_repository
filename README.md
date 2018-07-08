@@ -4,7 +4,7 @@
 
 Obtain all source code: `git clone: https://github.com/XianyiGao/insight_project_repository.git`
 
-Please see usage instructions under sub-directories: "web" and "etsy_item_price_estimation". "web" folder contains the source code for web application, and "etsy_item_price_estimation" is a Python package allowing you to extract, process, and analyze Etsy data. Model building and training is also included in this package.
+Please see instructions about how to use packages under sub-directories: "web" and "etsy_item_price_estimation". "web" folder contains the source code for web application, and "etsy_item_price_estimation" is a Python package allowing you to extract, process, and analyze Etsy data. Model building and training is also included in this package.
 
 ## About the Project
 
