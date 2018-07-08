@@ -24,12 +24,31 @@ Estimating the price for handmade items is very difficult because the item is hi
 
 ### The Distribution of Items over Different Categories
 
-<imag source ="/images/git6.png">
+<img src="/images/git6.png" width="600">
 
-###  
+### Scatter Plot of Price vs. Who Made the Item ("none" is when the feature is missing)
 
+<img src="/images/git1.png" width="600">
 
+### Scatter Plot of Price vs. When the Item was Made ("none" is when the feature is missing)
 
+<img src="/images/git3.png" width="600">
+
+### Scatter Plot of Price vs. Seller Rating ("0" is when the seller do not have rating yet)
+
+<img src="/images/git2.png" width="600">
 
 ## Implementation Details and Model Performance
+
+Since the problem is to estimate the item price, I first considered using a simple linear regression model because it is easy interpretable. However, after exploratory data analysis (as some of the data distribution figures shown in above section), I quickly realized that linear regression is not a good option for the problem for the following reasons:
+
+* Data is much more complicated than linear (e.g. price distribution changes non-linearly with the increase of seller scores)
+* There are a lot of categorical data. (Linear regression does not work well with categorical data)
+* There are many features available about the item and they can correlate with each other (e.g. 3 features on categories: category layer 1, category layer 2, and category later 3 that can relate to each other)
+
+Although correlation amoung features can be solved by removing some of the features, this simple approach is not ideal because different features can add in additional information even if it is a bit related to some other features.
+
+Therefore, I applied Random Forest Regression instead. It is a tree based regression that is robust against different data types and data scale. Tree based model also align with some of structures of feature data (e.g. 3 layers of item category that is meant to split hierarchically).
+
+
 
