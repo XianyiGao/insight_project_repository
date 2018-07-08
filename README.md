@@ -2,7 +2,7 @@
 
 ## About the Project
 
-"Etsymator" is a web application that provides price estimation for handmade items for Etsy merchants. The working web app is hosted in http://www.etsypriceestimator.com
+"Etsymator" is a web application that provides price estimation for handmade items for Etsy merchants. This is an insight data science project that was built in two weeks. The working web app is hosted on http://www.etsypriceestimator.com
 
 This project provides a data driven solution to estimate handmade item price using a machine learning model trained with the historical data from Etsy.com. The model achieves error (RMSE) as small as $19 for items within $1000.
 
@@ -50,5 +50,27 @@ Although correlation amoung features can be solved by removing some of the featu
 
 Therefore, I applied Random Forest Regression instead. It is a tree based regression that is robust against different data types and data scale. Tree based model also align with some of structures of feature data (e.g. 3 layers of item category that is meant to split hierarchically).
 
+### This figure shows predicted item price vs. true item price on the testing data (20% of total data). It has a good RMSE of $34 over $1000 range of item price. However, there are still quite some outliers in the upper left conner of the figure.
 
+<img src="/images/git8.png" width="600">
+
+After revisiting available data, one key part that I can still use is the item title, but it’s in the text form. Therefore, natural language processing is needed to process. There are several commonly used NLP approaches:
+
+* **word2vec**: A popular NLP algorithm to estimate the semantic similarity of words or sentences. This algorithm requires to train on the whole collection of documents to learn which words are similar to each other based on the context. While this is a good approach for semantic analysis, I would need exact word matching instead for my project.
+* **Latent Dirichlet Allocation (LDA)**: A popular NLP algorithm for document classification. This algorithm compares words in different documents (item title in this case) and classifies them based on the similarity. Since I need a vector representation of the item title but not for classification, it does not match with this project.
+* **TF-IDF**: This algorithm computes the frequency of words occurenting in the item title and it can convert the item title into a list of word features. It also considers the most common words and weights them less in the word vector. Therefore, **I applied this algorithm** for item title analysis.
+
+### This figure shows predicted item price vs. true item price on the testing data (20% of total data) with improved prediction accuracy after applying TF-IDF. Now the RMSE drops to $19 and there are much fewer outliers in the figure.
+
+<img src="/images/git9.png" width="600">
+
+### The feature importance based on the trained machine learning model
+
+<img src="/images/git7.png" width="800">
+
+## Web Application
+
+The final product of this project is a web app, currently hosted on http://www.etsypriceestimator.com
+
+### The screenshot of the web app
 
