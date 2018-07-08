@@ -15,6 +15,8 @@ This etsy_data_extract.py can simply be run to extract data from Etsy API. It wi
 
 As Etsy API provided restriction on the amount of API calls in a unit time, this data extraction script will take quite some time to obtain a large set of data. Please refer to the code documentation for details.
 
+Alternatively, you can use pre-extracted data 'user_info_complete' file in this directory. 'total_listing_data' can be downloaded from the link: http://bit.ly/total_listing
+
 2. `python create_database.py`
 
 This create_database.py can process all the raw data obtained from etsy_data_extract.py and create a database table in PostgreSQL. Please make sure your PostgreSQL is installed and running properly in the corresponding device for the module to work.
