@@ -74,3 +74,8 @@ The final product of this project is a web app, currently hosted on http://www.e
 
 ### The screenshot of the web app
 
+<img src="/images/git10.png" width="1000">
+
+### Example input to the web app: model can handle missing data and random string in "number only" fields
+
+<img src="/images/git11.png" width="500">
