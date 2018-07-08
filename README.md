@@ -1,8 +1,12 @@
 # Etsymator: Competitive Pricing for Etsy Merchants
 
+## Installation and Package Usage
+
+Please see instructions under sub-directories: "web" and "etsy_item_price_estimation".
+
 ## About the Project
 
-"Etsymator" is a web application that provides price estimation for handmade items for Etsy merchants. This is an insight data science project that was built in two weeks. The working web app is hosted on http://www.etsypriceestimator.com
+"Etsymator" is a web application that provides price estimation for handmade items for Etsy merchants. This is an insight data science project that was built in two weeks using Python, Flask, and AWS. The working web app is hosted on http://www.etsypriceestimator.com
 
 This project provides a data driven solution to estimate handmade item price using a machine learning model trained with the historical data from Etsy.com. The model achieves error (RMSE) as small as $19 for items within $1000.
 
