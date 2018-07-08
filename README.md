@@ -11,7 +11,7 @@ Applied Machine Learning Topics:
 * Natural Language Process (e.g. TF-IDF)
 * Random Forest Regression
 
-#### Project Motivation and Challenge
+### Project Motivation and Challenge
 
 With the increase of e-commerce market share, it's important to provide a great user experience for both buyers and sellers. However, with a little search online, it's not hard to find seller's frustration on pricing their items especially handmade ones. While there are many qualitative instructions online about how to price handmade goods, there is no decent price estimator available.
 
@@ -21,6 +21,12 @@ Estimating the price for handmade items is very difficult because the item is hi
 
 * 44771 items were extracted from Etsy.com with all item prices less than $1000
 * PostgreSQL was used for data management
+
+### The Distribution of Items over Different Categories
+
+![pretty_plot](https://user-images.githubusercontent.com/1843504/42423160-953d598a-82c3-11e8-918e-e2337da7087b.png)
+
+### 
 
 
 ## Implementation Details and Model Performance
