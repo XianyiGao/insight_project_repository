@@ -79,3 +79,9 @@ The final product of this project is a web app, currently hosted on http://www.e
 ### Example input to the web app: model can handle missing data and random string in "number only" fields
 
 <img src="/images/git11.png" width="500">
+
+### Example output for the price prediction
+
+<img src="/images/git12.png" width="1000">
+
+### Now, with the "Etsymator", Etsy merchants can get an accurate price estimation for their handmade items!
