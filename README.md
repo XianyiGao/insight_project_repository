@@ -2,7 +2,7 @@
 
 ## Installation and Package Usage
 
-Please see instructions under sub-directories: "web" and "etsy_item_price_estimation".
+Please see instructions under sub-directories: "web" and "etsy_item_price_estimation". "web" folder contains the source code for web application, and "etsy_item_price_estimation" is a Python package allowing you to extract, process, and analyze Etsy data. Model building and training is also included in this package.
 
 ## About the Project
 
